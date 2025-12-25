@@ -1,0 +1,37 @@
+import { createRouter, createWebHistory } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('@views/Home.vue'),
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@views/auth/Login.vue'),
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@views/auth/Register.vue'),
+  },
+  {
+    path: '/questions',
+    name: 'Questions',
+    component: () => import('@views/questions/QuestionList.vue'),
+  },
+  {
+    path: '/questions/:id',
+    name: 'QuestionDetail',
+    component: () => import('@views/questions/QuestionDetail.vue'),
+  },
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+export default router;
