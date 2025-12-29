@@ -119,17 +119,6 @@ export interface QuestionQueryDto {
 }
 
 /**
- * Paginated response
- */
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-/**
  * Category entity
  */
 export interface Category {

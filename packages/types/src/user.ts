@@ -22,32 +22,6 @@ export interface User {
 }
 
 /**
- * User creation DTO
- */
-export interface CreateUserDto {
-  username: string;
-  email: string;
-  password: string;
-}
-
-/**
- * User login DTO
- */
-export interface LoginDto {
-  email: string;
-  password: string;
-}
-
-/**
- * User update DTO
- */
-export interface UpdateUserDto {
-  username?: string;
-  avatar?: string;
-  bio?: string;
-}
-
-/**
  * JWT payload
  */
 export interface JwtPayload {

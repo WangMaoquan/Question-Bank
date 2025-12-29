@@ -31,6 +31,9 @@ export class User {
   })
   role: UserRole;
 
+  @Column({ default: 0 })
+  contributionScore: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
