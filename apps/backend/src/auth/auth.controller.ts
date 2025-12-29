@@ -4,13 +4,22 @@ import {
   Body,
   UseGuards,
   Get,
-  Request,
+  Req, // Changed from Request to Req
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthResponse } from '@question-bank/types';
+import { AuthResponse, UserRole } from '@question-bank/types'; // Added UserRole
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { Request } from 'express'; // Added Request from express
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email: string;
+    role: UserRole;
+  };
+}
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +37,8 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req: any) {
-    return req.user;
+  getProfile(@Req() req: AuthenticatedRequest) {
+    // Changed type to AuthenticatedRequest and decorator to @Req
+    return req.user; // Removed eslint-disable comments
   }
 }

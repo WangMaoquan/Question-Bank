@@ -13,9 +13,10 @@ import { JwtStrategy } from './jwt.strategy';
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           expiresIn: (configService.get<string>('JWT_EXPIRES_IN') ||
             '7d') as any,
         },

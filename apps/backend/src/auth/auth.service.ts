@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthResponse, JwtPayload } from '@question-bank/types';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -13,11 +14,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, pass: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(pass, user.passwordHash))) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { passwordHash, ...result } = user;
-      return result;
+      return result as User;
     }
     return null;
   }
@@ -47,12 +49,12 @@ export class AuthService {
       role: user.role,
     };
 
-    // 移除 passwordHash 避免返回
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordHash, ...result } = user;
 
     return {
       accessToken: this.jwtService.sign(payload),
-      user: result,
+      user: result as User,
     };
   }
 }
