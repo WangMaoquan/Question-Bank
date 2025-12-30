@@ -7,53 +7,44 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger('HTTP');
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const request = context.switchToHttp().getRequest();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { method, url, body, query, params } = request;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+    const request = context.switchToHttp().getRequest<Request>();
+    const { method, url, query, params } = request;
+    const body: unknown = request.body;
     const userAgent = request.get('user-agent') || '';
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const ip = request.ip;
+    const ip = request.ip || 'unknown';
 
     const now = Date.now();
 
     // Log request
     this.logger.log(
-      `📥 ${method as string} ${url as string} - IP: ${ip as string} - User-Agent: ${userAgent as string}`,
+      `📥 ${method} ${url} - IP: ${ip} - User-Agent: ${userAgent}`,
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (Object.keys(query).length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       this.logger.debug(`Query: ${JSON.stringify(query)}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (Object.keys(params).length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       this.logger.debug(`Params: ${JSON.stringify(params)}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    if (body && Object.keys(body).length > 0) {
+    if (body && typeof body === 'object' && body !== null) {
       // Don't log sensitive data like passwords
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const sanitizedBody = { ...body };
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (sanitizedBody.password) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const sanitizedBody: Record<string, unknown> = { ...body } as Record<
+        string,
+        unknown
+      >;
+      if ('password' in sanitizedBody) {
         sanitizedBody.password = '***';
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (sanitizedBody.passwordHash) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if ('passwordHash' in sanitizedBody) {
         sanitizedBody.passwordHash = '***';
       }
       this.logger.debug(`Body: ${JSON.stringify(sanitizedBody)}`);
@@ -62,22 +53,18 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap({
         next: () => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const response = context.switchToHttp().getResponse();
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const response = context.switchToHttp().getResponse<Response>();
           const { statusCode } = response;
           const duration = Date.now() - now;
 
           this.logger.log(
-            `📤 ${method as string} ${url as string} - ${statusCode as number} - ${duration}ms`,
+            `📤 ${method} ${url} - ${statusCode} - ${duration}ms`,
           );
         },
-        error: (error: any) => {
+        error: (error: Error & { status?: number }) => {
           const duration = Date.now() - now;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           this.logger.error(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            `❌ ${method as string} ${url as string} - ${error.status || 500} - ${duration}ms - ${error.message}`,
+            `❌ ${method} ${url} - ${error.status || 500} - ${duration}ms - ${error.message}`,
           );
         },
       }),
