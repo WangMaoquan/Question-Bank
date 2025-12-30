@@ -25,7 +25,12 @@ import { AppService } from './app.service';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true, // 注意: 仅在开发环境使用，生产环境请设置为 false 并使用 migration
+        synchronize: true, // ⚠️ Disable in production, use migrations
+        logging:
+          process.env.NODE_ENV === 'development'
+            ? ['query', 'error']
+            : ['error'],
+        logger: 'advanced-console',
         autoLoadEntities: true,
       }),
       inject: [ConfigService],
