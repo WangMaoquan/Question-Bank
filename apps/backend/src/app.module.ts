@@ -3,6 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { QuestionsModule } from './questions/questions.module';
+import { CategoriesModule } from './categories/categories.module';
+import { TagsModule } from './tags/tags.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -29,6 +32,9 @@ import { AppService } from './app.service';
     }),
     UsersModule,
     AuthModule,
+    CategoriesModule,
+    TagsModule,
+    QuestionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
