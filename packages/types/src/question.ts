@@ -137,6 +137,16 @@ export interface Category {
 }
 
 /**
+ * Create Category DTO
+ */
+export interface CreateCategoryDto {
+  name: string;
+  description?: string;
+  parentId?: string;
+  sortOrder?: number;
+}
+
+/**
  * Tag entity
  */
 export interface Tag {
@@ -144,4 +154,12 @@ export interface Tag {
   name: string;
   color?: string;
   createdAt: Date;
+}
+
+/**
+ * Create Tag DTO
+ */
+export interface CreateTagDto {
+  name: string;
+  color?: string;
 }
