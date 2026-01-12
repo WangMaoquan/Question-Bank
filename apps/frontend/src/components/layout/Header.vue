@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { ref, computed } from 'vue';
+import { RouterLink, useRouter, useRoute } from 'vue-router';
 import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { UserCircleIcon } from '@heroicons/vue/24/solid';
 import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
+const route = useRoute();
 const authStore = useAuthStore();
 const mobileMenuOpen = ref(false);
 
@@ -15,6 +16,11 @@ const navigation = [
   { name: '练习', href: '/practice' },
   { name: '社区', href: '/community' },
 ];
+
+// 检查是否在认证页面
+const isAuthPage = computed(() => {
+  return route.path === '/login' || route.path === '/register';
+});
 
 const handleLogout = () => {
   authStore.logout();
@@ -58,7 +64,7 @@ const handleLogout = () => {
           {{ item.name }}
         </RouterLink>
       </div>
-      <div class="hidden lg:flex lg:flex-1 lg:justify-end gap-x-4">
+      <div v-if="!isAuthPage" class="hidden lg:flex lg:flex-1 lg:justify-end gap-x-4">
         <template v-if="!authStore.isAuthenticated">
           <RouterLink to="/login" class="text-sm font-semibold leading-6 text-gray-900">
             登录 <span aria-hidden="true">&rarr;</span>
@@ -136,7 +142,7 @@ const handleLogout = () => {
                 {{ item.name }}
               </RouterLink>
             </div>
-            <div class="py-6">
+            <div v-if="!isAuthPage" class="py-6">
               <RouterLink
                 to="/login"
                 class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
