@@ -4,8 +4,12 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { UserRole } from '@question-bank/types';
+import { Question } from '../questions/entities/question.entity';
+import { PracticeRecord } from '../practice/entities/practice-record.entity';
+import { Favorite } from '../practice/entities/favorite.entity';
 
 @Entity('users')
 export class User {
@@ -30,6 +34,15 @@ export class User {
     default: UserRole.USER,
   })
   role: UserRole;
+
+  @OneToMany(() => Question, (question) => question.creator)
+  questions: Question[];
+
+  @OneToMany(() => PracticeRecord, (record) => record.user)
+  practiceRecords: PracticeRecord[];
+
+  @OneToMany(() => Favorite, (favorite) => favorite.user)
+  favorites: Favorite[];
 
   @Column({ default: 0 })
   contributionScore: number;

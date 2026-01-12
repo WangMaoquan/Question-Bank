@@ -7,6 +7,7 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import {
   QuestionType,
@@ -17,6 +18,8 @@ import {
 import { User } from '../../users/user.entity';
 import { Category } from '../../categories/category.entity';
 import { Tag } from '../../tags/tag.entity';
+import { PracticeRecord } from '../../practice/entities/practice-record.entity';
+import { Favorite } from '../../practice/entities/favorite.entity';
 
 @Entity('questions')
 export class Question {
@@ -84,6 +87,12 @@ export class Question {
 
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
   correctRate: number;
+
+  @OneToMany(() => PracticeRecord, (record) => record.question)
+  practiceRecords: PracticeRecord[];
+
+  @OneToMany(() => Favorite, (favorite) => favorite.question)
+  favorites: Favorite[];
 
   @CreateDateColumn()
   createdAt: Date;
