@@ -5,11 +5,19 @@
   "description": "Community-driven question bank platform",
   "scripts": {
     "dev": "pnpm -r --parallel dev",
+    "dev:backend": "pnpm --filter @question-bank/backend start:dev",
+    "dev:frontend": "pnpm --filter @question-bank/frontend dev",
+    "dev:admin": "pnpm --filter @question-bank/admin dev",
     "build": "pnpm -r build",
+    "build:backend": "pnpm --filter @question-bank/backend build",
+    "build:frontend": "pnpm --filter @question-bank/frontend build",
+    "build:admin": "pnpm --filter @question-bank/admin build",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r exec eslint . --fix",
+    "typecheck": "pnpm -r exec tsc --noEmit",
     "format": "prettier --write \"**/*.{ts,tsx,vue,js,json,md}\"",
-    "clean": "pnpm -r clean && rm -rf node_modules"
+    "clean": "pnpm -r exec rm -rf dist node_modules && rm -rf node_modules"
   },
   "keywords": [
     "question-bank",
