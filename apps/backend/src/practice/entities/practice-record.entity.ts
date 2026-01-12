@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { User } from '../../users/user.entity';
 import { Question } from '../../questions/entities/question.entity';
+import type { QuestionAnswer } from '@question-bank/types';
 
 @Entity('practice_records')
 export class PracticeRecord {
@@ -31,7 +32,7 @@ export class PracticeRecord {
   question: Question;
 
   @Column({ type: 'jsonb', nullable: true })
-  userAnswer: any;
+  userAnswer: QuestionAnswer;
 
   @Column()
   isCorrect: boolean;

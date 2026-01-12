@@ -21,20 +21,23 @@ export class PracticeService {
     private questionsService: QuestionsService,
   ) {}
 
-  async submitAnswer(userId: string, dto: SubmitAnswerDto) {
-    const question = await this.questionsService.findOne(dto.questionId);
+  async submitAnswer(userId: string, submitAnswerDto: SubmitAnswerDto) {
+    const question = await this.questionsService.findOne(
+      submitAnswerDto.questionId,
+    );
 
     // Simple equality check for now.
     // Ideally, this logic should be more sophisticated based on question type.
     const isCorrect =
-      JSON.stringify(dto.userAnswer) === JSON.stringify(question.answer);
+      JSON.stringify(submitAnswerDto.userAnswer) ===
+      JSON.stringify(question.answer);
 
     const record = this.practiceRecordRepository.create({
       userId,
-      questionId: dto.questionId,
-      userAnswer: dto.userAnswer,
+      questionId: submitAnswerDto.questionId,
+      userAnswer: submitAnswerDto.userAnswer,
       isCorrect,
-      timeSpent: dto.timeSpent || 0,
+      timeSpent: submitAnswerDto.timeSpent || 0,
     });
 
     return this.practiceRecordRepository.save(record);
@@ -48,21 +51,21 @@ export class PracticeService {
     });
   }
 
-  async addFavorite(userId: string, dto: CreateFavoriteDto) {
+  async addFavorite(userId: string, createFavoriteDto: CreateFavoriteDto) {
     // Check if duplicate
     const exists = await this.favoriteRepository.findOne({
-      where: { userId, questionId: dto.questionId },
+      where: { userId, questionId: createFavoriteDto.questionId },
     });
     if (exists) {
       throw new ConflictException('Question already favorited');
     }
 
     // Check if question exists
-    await this.questionsService.findOne(dto.questionId);
+    await this.questionsService.findOne(createFavoriteDto.questionId);
 
     const favorite = this.favoriteRepository.create({
       userId,
-      questionId: dto.questionId,
+      questionId: createFavoriteDto.questionId,
     });
     return this.favoriteRepository.save(favorite);
   }

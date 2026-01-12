@@ -24,8 +24,11 @@ export class PracticeController {
 
   @ApiOperation({ summary: 'Submit an answer to a question' })
   @Post('submit')
-  submitAnswer(@Req() req: AuthenticatedRequest, @Body() dto: SubmitAnswerDto) {
-    return this.practiceService.submitAnswer(req.user.id, dto);
+  submitAnswer(
+    @Req() req: AuthenticatedRequest,
+    @Body() submitAnswerDto: SubmitAnswerDto,
+  ) {
+    return this.practiceService.submitAnswer(req.user.id, submitAnswerDto);
   }
 
   @ApiOperation({ summary: 'Get user practice records' })
@@ -38,9 +41,9 @@ export class PracticeController {
   @Post('favorites')
   addFavorite(
     @Req() req: AuthenticatedRequest,
-    @Body() dto: CreateFavoriteDto,
+    @Body() createFavoriteDto: CreateFavoriteDto,
   ) {
-    return this.practiceService.addFavorite(req.user.id, dto);
+    return this.practiceService.addFavorite(req.user.id, createFavoriteDto);
   }
 
   @ApiOperation({ summary: 'Remove a question from favorites' })

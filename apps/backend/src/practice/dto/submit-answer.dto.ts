@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsUUID, IsJSON, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
+import type { QuestionAnswer } from '@question-bank/types';
 
 export class SubmitAnswerDto {
   @IsNotEmpty()
@@ -6,7 +7,7 @@ export class SubmitAnswerDto {
   questionId: string;
 
   @IsNotEmpty()
-  userAnswer: any; // Can be string, number, array, or object depending on question type
+  userAnswer: QuestionAnswer; // Can be string, number, array, or object depending on question type
 
   @IsOptional()
   timeSpent?: number;
