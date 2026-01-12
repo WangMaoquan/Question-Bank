@@ -102,7 +102,12 @@ const onSubmit = handleSubmit(async (values) => {
           </div>
 
           <div class="text-sm">
-            <a href="#" class="font-medium text-primary-600 hover:text-primary-500"> 忘记密码？ </a>
+            <router-link
+              to="/forgot-password"
+              class="font-medium text-primary-600 hover:text-primary-500"
+            >
+              忘记密码？
+            </router-link>
           </div>
         </div>
 
