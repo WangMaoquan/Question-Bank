@@ -38,6 +38,11 @@ export interface QuestionOption {
 }
 
 /**
+ * Question answer type
+ */
+export type QuestionAnswer = string | string[] | boolean | Record<string, unknown>;
+
+/**
  * Question entity
  */
 export interface Question {
@@ -46,7 +51,7 @@ export interface Question {
   title: string;
   content: string;
   options?: QuestionOption[];
-  answer: any;
+  answer: QuestionAnswer;
   explanation?: string;
   difficulty: QuestionDifficulty;
   categoryId?: string;
@@ -92,7 +97,7 @@ export interface UpdateQuestionDto {
   title?: string;
   content?: string;
   options?: QuestionOption[];
-  answer?: any;
+  answer?: QuestionAnswer;
   explanation?: string;
   difficulty?: QuestionDifficulty;
   categoryId?: string;
