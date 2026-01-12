@@ -17,6 +17,11 @@ export interface ApiConfig {
   getToken?: () => string | null;
 }
 
+export interface ApiRequestConfig extends AxiosRequestConfig {
+  retry?: number;
+  retryDelay?: number;
+}
+
 export class ApiClient {
   private client: AxiosInstance;
   public auth: AuthApi;
@@ -54,7 +59,17 @@ export class ApiClient {
     // Response Interceptor
     this.client.interceptors.response.use(
       (response) => response.data,
-      (error: AxiosError) => {
+      async (error: AxiosError) => {
+        const config = error.config as ApiRequestConfig;
+
+        // Retry logic
+        if (config && config.retry && config.retry > 0 && config.method === 'get') {
+          config.retry -= 1;
+          const delay = config.retryDelay || 1000;
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          return this.client(config);
+        }
+
         if (error.response?.status === 401) {
           this.config.onUnauthorized?.();
         }
@@ -64,20 +79,46 @@ export class ApiClient {
     );
   }
 
-  // Generic request methods if needed directly
-  public get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  // Helper for file upload
+  public async upload<T = any>(
+    url: string,
+    file: File,
+    fieldName = 'file',
+    additionalData?: Record<string, any>,
+    config?: ApiRequestConfig
+  ): Promise<T> {
+    const formData = new FormData();
+    formData.append(fieldName, file);
+
+    if (additionalData) {
+      Object.entries(additionalData).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+    }
+
+    return this.post<T>(url, formData, {
+      ...config,
+      headers: {
+        ...config?.headers,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
+
+  // Generic request methods
+  public get<T = any>(url: string, config?: ApiRequestConfig): Promise<T> {
     return this.client.get(url, config);
   }
 
-  public post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  public post<T = any>(url: string, data?: any, config?: ApiRequestConfig): Promise<T> {
     return this.client.post(url, data, config);
   }
 
-  public put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  public put<T = any>(url: string, data?: any, config?: ApiRequestConfig): Promise<T> {
     return this.client.put(url, data, config);
   }
 
-  public delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public delete<T = any>(url: string, config?: ApiRequestConfig): Promise<T> {
     return this.client.delete(url, config);
   }
 }
