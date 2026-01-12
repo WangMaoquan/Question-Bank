@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { QuestionsModule } from './questions/questions.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TagsModule } from './tags/tags.module';
+import { PracticeModule } from './practice/practice.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -47,6 +48,7 @@ import { AppService } from './app.service';
     CategoriesModule,
     TagsModule,
     QuestionsModule,
+    PracticeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
