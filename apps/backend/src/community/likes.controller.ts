@@ -14,7 +14,7 @@ import { ToggleLikeDto } from './dto/toggle-like.dto';
 import { LikeTargetType } from './entities/like.entity';
 import type { AuthenticatedRequest } from '../auth/auth.controller';
 
-@ApiTags('Likes')
+@ApiTags('点赞 (Likes)')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('likes')
@@ -22,14 +22,18 @@ export class LikesController {
   constructor(private readonly likesService: LikesService) {}
 
   @ApiOperation({
-    summary: 'Toggle like status for a target (question/comment)',
+    summary: '切换点赞状态',
+    description: '对题目或评论进行点赞/取消点赞',
   })
   @Post()
   toggleLike(@Req() req: AuthenticatedRequest, @Body() dto: ToggleLikeDto) {
     return this.likesService.toggleLike(req.user.id, dto);
   }
 
-  @ApiOperation({ summary: 'Check if user liked a specific target' })
+  @ApiOperation({
+    summary: '检查点赞状态',
+    description: '检查当前用户是否已点赞',
+  })
   @Get('status')
   getLikeStatus(
     @Req() req: AuthenticatedRequest,
