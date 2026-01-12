@@ -10,6 +10,7 @@ import { UserRole } from '@question-bank/types';
 import { Question } from '../questions/entities/question.entity';
 import { PracticeRecord } from '../practice/entities/practice-record.entity';
 import { Favorite } from '../practice/entities/favorite.entity';
+import { Comment } from '../community/entities/comment.entity'; // Add this import
 
 @Entity('users')
 export class User {
@@ -43,6 +44,9 @@ export class User {
 
   @OneToMany(() => Favorite, (favorite) => favorite.user)
   favorites: Favorite[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 
   @Column({ default: 0 })
   contributionScore: number;

@@ -20,6 +20,7 @@ import { Category } from '../../categories/category.entity';
 import { Tag } from '../../tags/tag.entity';
 import { PracticeRecord } from '../../practice/entities/practice-record.entity';
 import { Favorite } from '../../practice/entities/favorite.entity';
+import { Comment } from '../../community/entities/comment.entity'; // Add this import
 
 @Entity('questions')
 export class Question {
@@ -93,6 +94,9 @@ export class Question {
 
   @OneToMany(() => Favorite, (favorite) => favorite.question)
   favorites: Favorite[];
+
+  @OneToMany(() => Comment, (comment) => comment.question)
+  comments: Comment[];
 
   @CreateDateColumn()
   createdAt: Date;
