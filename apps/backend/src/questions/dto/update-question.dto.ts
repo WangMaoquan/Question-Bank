@@ -11,6 +11,8 @@ import {
   QuestionStatus,
   QuestionOption,
 } from '@question-bank/types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { QuestionAnswer } from '@question-bank/types';
 
 export class UpdateQuestionDto {
   @IsOptional()
