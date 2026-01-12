@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import { Dialog, DialogPanel } from '@headlessui/vue';
+import { RouterLink, useRouter } from 'vue-router';
+import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { UserCircleIcon } from '@heroicons/vue/24/solid';
+import { useAuthStore } from '@/stores/auth';
 
+const router = useRouter();
+const authStore = useAuthStore();
 const mobileMenuOpen = ref(false);
 
 const navigation = [
@@ -12,7 +16,10 @@ const navigation = [
   { name: '社区', href: '/community' },
 ];
 
-const user = ref(null); // TODO: Integrate with Auth Store
+const handleLogout = () => {
+  authStore.logout();
+  router.push('/login');
+};
 </script>
 
 <template>
@@ -52,7 +59,7 @@ const user = ref(null); // TODO: Integrate with Auth Store
         </RouterLink>
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end gap-x-4">
-        <template v-if="!user">
+        <template v-if="!authStore.isAuthenticated">
           <RouterLink to="/login" class="text-sm font-semibold leading-6 text-gray-900">
             登录 <span aria-hidden="true">&rarr;</span>
           </RouterLink>
@@ -64,8 +71,37 @@ const user = ref(null); // TODO: Integrate with Auth Store
           </RouterLink>
         </template>
         <template v-else>
-          <!-- User Menu Placeholder -->
-          <span>User Profile</span>
+          <Menu as="div" class="relative">
+            <MenuButton
+              class="flex items-center gap-x-2 text-sm font-semibold leading-6 text-gray-900"
+            >
+              <UserCircleIcon class="h-8 w-8 text-gray-400" />
+              <span>{{ authStore.user?.username }}</span>
+            </MenuButton>
+            <MenuItems
+              class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            >
+              <MenuItem v-slot="{ active }">
+                <RouterLink
+                  to="/profile"
+                  :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
+                >
+                  个人中心
+                </RouterLink>
+              </MenuItem>
+              <MenuItem v-slot="{ active }">
+                <button
+                  @click="handleLogout"
+                  :class="[
+                    active ? 'bg-gray-100' : '',
+                    'block w-full text-left px-4 py-2 text-sm text-gray-700',
+                  ]"
+                >
+                  退出登录
+                </button>
+              </MenuItem>
+            </MenuItems>
+          </Menu>
         </template>
       </div>
     </nav>
