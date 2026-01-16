@@ -225,7 +225,7 @@ onMounted(() => {
           >
             <div class="flex items-center gap-3">
               <span
-                class="flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center"
+                class="shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center"
                 :class="[
                   selectedAnswer === option
                     ? 'border-primary-600 bg-primary-600'

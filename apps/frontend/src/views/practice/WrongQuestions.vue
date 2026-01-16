@@ -84,7 +84,7 @@ onMounted(() => {
     </div>
 
     <!-- Stats Card -->
-    <div class="bg-gradient-to-r from-red-500 to-pink-500 rounded-lg shadow-lg p-6 mb-6 text-white">
+    <div class="bg-linear-to-r from-red-500 to-pink-500 rounded-lg shadow-lg p-6 mb-6 text-white">
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm opacity-90">错题总数</p>

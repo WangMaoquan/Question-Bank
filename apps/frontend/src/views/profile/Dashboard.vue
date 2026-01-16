@@ -76,7 +76,7 @@ onMounted(() => {
     <!-- Statistics Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <!-- Total Answered -->
-      <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
+      <div class="bg-linear-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm opacity-90">答题总数</p>
@@ -113,7 +113,7 @@ onMounted(() => {
       </div>
 
       <!-- Wrong Count -->
-      <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-lg p-6 text-white">
+      <div class="bg-linear-to-br from-red-500 to-red-600 rounded-lg shadow-lg p-6 text-white">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm opacity-90">答错题目</p>
@@ -154,7 +154,7 @@ onMounted(() => {
         <div class="grow">
           <div class="w-full bg-gray-200 rounded-full h-4">
             <div
-              class="bg-gradient-to-r from-green-400 to-green-600 h-4 rounded-full transition-all duration-500"
+              class="bg-linear-to-r from-green-400 to-green-600 h-4 rounded-full transition-all duration-500"
               :style="{ width: `${stats.accuracy}%` }"
             ></div>
           </div>
