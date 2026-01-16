@@ -13,7 +13,15 @@ const mobileMenuOpen = ref(false);
 
 const navigation = [
   { name: '题目', href: '/questions' },
-  { name: '练习', href: '/practice' },
+  {
+    name: '练习',
+    href: '/practice',
+    submenu: [
+      { name: '练习记录', href: '/practice/records' },
+      { name: '错题本', href: '/practice/wrong' },
+      { name: '我的收藏', href: '/practice/favorites' },
+    ],
+  },
   { name: '社区', href: '/community' },
 ];
 
@@ -54,15 +62,46 @@ const handleLogout = () => {
           <Bars3Icon class="h-6 w-6" aria-hidden="true" />
         </button>
       </div>
-      <div class="hidden lg:flex lg:gap-x-12">
-        <RouterLink
-          v-for="item in navigation"
-          :key="item.name"
-          :to="item.href"
-          class="text-sm font-semibold leading-6 text-gray-900 hover:text-primary-600 transition-colors"
-        >
-          {{ item.name }}
-        </RouterLink>
+      <div class="hidden lg:flex lg:gap-x-8">
+        <template v-for="item in navigation" :key="item.name">
+          <!-- Menu with submenu -->
+          <Menu v-if="item.submenu" as="div" class="relative">
+            <MenuButton
+              class="text-sm font-semibold leading-6 text-gray-900 hover:text-primary-600 transition-colors flex items-center gap-1"
+            >
+              {{ item.name }}
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </MenuButton>
+            <MenuItems
+              class="absolute left-0 z-10 mt-2 w-48 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            >
+              <MenuItem v-for="subitem in item.submenu" :key="subitem.name" v-slot="{ active }">
+                <RouterLink
+                  :to="subitem.href"
+                  :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
+                >
+                  {{ subitem.name }}
+                </RouterLink>
+              </MenuItem>
+            </MenuItems>
+          </Menu>
+
+          <!-- Simple link without submenu -->
+          <RouterLink
+            v-else
+            :to="item.href"
+            class="text-sm font-semibold leading-6 text-gray-900 hover:text-primary-600 transition-colors"
+          >
+            {{ item.name }}
+          </RouterLink>
+        </template>
       </div>
       <div v-if="!isAuthPage" class="hidden lg:flex lg:flex-1 lg:justify-end gap-x-4">
         <template v-if="!authStore.isAuthenticated">
