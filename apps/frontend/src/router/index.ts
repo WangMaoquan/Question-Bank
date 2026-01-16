@@ -52,6 +52,11 @@ const routes: RouteRecordRaw[] = [
     name: 'WrongQuestions',
     component: () => import('@views/practice/WrongQuestions.vue'),
   },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('@views/profile/Dashboard.vue'),
+  },
 ];
 
 const router = createRouter({
