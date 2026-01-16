@@ -32,6 +32,16 @@ const routes: RouteRecordRaw[] = [
     name: 'QuestionDetail',
     component: () => import('@views/questions/QuestionDetail.vue'),
   },
+  {
+    path: '/practice',
+    name: 'Practice',
+    redirect: '/practice/records',
+  },
+  {
+    path: '/practice/records',
+    name: 'PracticeRecords',
+    component: () => import('@views/practice/Records.vue'),
+  },
 ];
 
 const router = createRouter({
