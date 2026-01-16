@@ -42,6 +42,16 @@ const routes: RouteRecordRaw[] = [
     name: 'PracticeRecords',
     component: () => import('@views/practice/Records.vue'),
   },
+  {
+    path: '/practice/favorites',
+    name: 'Favorites',
+    component: () => import('@views/practice/Favorites.vue'),
+  },
+  {
+    path: '/practice/wrong',
+    name: 'WrongQuestions',
+    component: () => import('@views/practice/WrongQuestions.vue'),
+  },
 ];
 
 const router = createRouter({
