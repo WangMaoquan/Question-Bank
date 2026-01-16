@@ -43,10 +43,10 @@ async function fetchQuestions() {
 
     const response: PaginatedResponse<Question> = await apiClient.questions.getQuestions(params);
 
-    questions.value = response.data;
-    total.value = response.total;
-    totalPages.value = response.totalPages;
-    currentPage.value = response.currentPage;
+    questions.value = response.items;
+    total.value = response.meta.total;
+    totalPages.value = response.meta.totalPages;
+    currentPage.value = response.meta.page;
   } catch (err: any) {
     error.value = err.response?.data?.message || '获取题目列表失败';
   } finally {

@@ -25,10 +25,10 @@ async function fetchRecords() {
       limit: pageSize.value,
     });
 
-    records.value = response.data;
-    total.value = response.total;
-    totalPages.value = response.totalPages;
-    currentPage.value = response.currentPage;
+    records.value = response.items;
+    total.value = response.meta.total;
+    totalPages.value = response.meta.totalPages;
+    currentPage.value = response.meta.page;
   } catch (err: any) {
     error.value = err.response?.data?.message || '获取练习记录失败';
   } finally {
