@@ -16,6 +16,8 @@ const selectedAnswer = ref<any>(null);
 const isSubmitting = ref(false);
 const showAnswer = ref(false);
 const userAnswer = ref<any>(null);
+const isFavorited = ref(false);
+const isFavoriteLoading = ref(false);
 
 const questionId = computed(() => route.params.id as string);
 
@@ -84,6 +86,28 @@ async function submitAnswer() {
 
 function toggleAnswer() {
   showAnswer.value = !showAnswer.value;
+}
+
+async function toggleFavorite() {
+  if (!authStore.isAuthenticated) {
+    router.push('/login');
+    return;
+  }
+
+  isFavoriteLoading.value = true;
+  try {
+    if (isFavorited.value) {
+      await apiClient.practice.removeFavorite(questionId.value);
+      isFavorited.value = false;
+    } else {
+      await apiClient.practice.addFavorite(questionId.value);
+      isFavorited.value = true;
+    }
+  } catch (err: any) {
+    error.value = err.response?.data?.message || '操作失败';
+  } finally {
+    isFavoriteLoading.value = false;
+  }
 }
 
 function goBack() {
