@@ -15,7 +15,9 @@
     "axios": "^1.6.0",
     "@headlessui/vue": "^1.7.0",
     "@heroicons/vue": "^2.1.0",
-    "@question-bank/types": "workspace:*"
+    "@question-bank/types": "workspace:*",
+    "@question-bank/api-client": "workspace:*",
+    "@question-bank/utils": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
