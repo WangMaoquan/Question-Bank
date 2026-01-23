@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useForm, FieldArray } from 'vee-validate';
+import { useForm } from 'vee-validate';
 import * as yup from 'yup';
+import { useToast } from '@question-bank/utils';
 import apiClient from '@/api/client';
 import type { Question } from '@question-bank/types';
+import type { AxiosError } from 'axios';
 
-const route = useRouter();
+const route = useRoute();
 const router = useRouter();
+const toast = useToast();
 const questionId = computed(() => route.params.id as string | undefined);
 const isEditing = computed(() => !!questionId.value);
 
