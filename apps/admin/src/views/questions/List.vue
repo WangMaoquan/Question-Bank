@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToast } from '@question-bank/utils';
+import Pagination from '@/components/shared/Pagination.vue';
+import SkeletonLoader from '@/components/shared/SkeletonLoader.vue';
 import apiClient from '@/api/client';
 import type { Question, PaginatedResponse } from '@question-bank/types';
+import type { AxiosError } from 'axios';
 
 const router = useRouter();
+const toast = useToast();
 const questions = ref<Question[]>([]);
 const isLoading = ref(false);
-const error = ref('');
 
 const currentPage = ref(1);
 const totalPages = ref(1);
@@ -20,10 +24,9 @@ const selectedType = ref('');
 
 async function fetchQuestions() {
   isLoading.value = true;
-  error.value = '';
 
   try {
-    const params: any = {
+    const params: Record<string, string | number> = {
       page: currentPage.value,
       limit: pageSize.value,
     };
@@ -44,8 +47,10 @@ async function fetchQuestions() {
     total.value = response.meta.total;
     totalPages.value = response.meta.totalPages;
     currentPage.value = response.meta.page;
-  } catch (err: any) {
-    error.value = err.response?.data?.message || '获取题目列表失败';
+  } catch (err) {
+    const error = err as AxiosError<{ message?: string }>;
+    const message = error.response?.data?.message || '获取题目列表失败';
+    toast.error(message);
   } finally {
     isLoading.value = false;
   }
@@ -56,9 +61,12 @@ async function deleteQuestion(id: string) {
 
   try {
     await apiClient.questions.deleteQuestion(id);
+    toast.success('删除成功');
     fetchQuestions();
-  } catch (err: any) {
-    error.value = err.response?.data?.message || '删除失败';
+  } catch (err) {
+    const error = err as AxiosError<{ message?: string }>;
+    const message = error.response?.data?.message || '删除失败';
+    toast.error(message);
   }
 }
 
@@ -150,18 +158,8 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Error Message -->
-    <div v-if="error" class="mt-4 bg-red-50 border border-red-200 rounded-md p-4">
-      <p class="text-red-800">{{ error }}</p>
-    </div>
-
     <!-- Loading -->
-    <div v-if="isLoading" class="mt-8 text-center py-12">
-      <div
-        class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"
-      ></div>
-      <p class="mt-4 text-gray-600">加载中...</p>
-    </div>
+    <SkeletonLoader v-if="isLoading" class="mt-8" :lines="5" />
 
     <!-- Questions Table -->
     <div v-else-if="questions.length > 0" class="mt-8 flow-root">
@@ -270,65 +268,13 @@ onMounted(() => {
       </div>
     </div>
 
-    <!--Pagination -->
-    <div
-      v-if="totalPages > 1"
-      class="mt-6 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 rounded-lg"
-    >
-      <div class="flex grow justify-between sm:hidden">
-        <button
-          @click="handlePageChange(currentPage - 1)"
-          :disabled="currentPage === 1"
-          class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-        >
-          上一页
-        </button>
-        <button
-          @click="handlePageChange(currentPage + 1)"
-          :disabled="currentPage === totalPages"
-          class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-        >
-          下一页
-        </button>
-      </div>
-      <div class="hidden sm:flex sm:grow sm:items-center sm:justify-between">
-        <div>
-          <p class="text-sm text-gray-700">
-            共 <span class="font-medium">{{ total }}</span> 条记录
-          </p>
-        </div>
-        <div>
-          <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-            <button
-              @click="handlePageChange(currentPage - 1)"
-              :disabled="currentPage === 1"
-              class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
-            >
-              上一页
-            </button>
-            <button
-              v-for="page in Math.min(totalPages, 10)"
-              :key="page"
-              @click="handlePageChange(page)"
-              :class="[
-                'relative inline-flex items-center px-4 py-2 text-sm font-semibold',
-                page === currentPage
-                  ? 'z-10 bg-primary-600 text-white'
-                  : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50',
-              ]"
-            >
-              {{ page }}
-            </button>
-            <button
-              @click="handlePageChange(currentPage + 1)"
-              :disabled="currentPage === totalPages"
-              class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
-            >
-              下一页
-            </button>
-          </nav>
-        </div>
-      </div>
-    </div>
+    <!-- Pagination -->
+    <Pagination
+      :current-page="currentPage"
+      :total-pages="totalPages"
+      :total="total"
+      @page-change="handlePageChange"
+      class="mt-6"
+    />
   </div>
 </template>

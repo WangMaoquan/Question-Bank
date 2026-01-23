@@ -7,6 +7,7 @@ import { useToast } from '@question-bank/utils';
 import apiClient from '@/api/client';
 import type { Question } from '@question-bank/types';
 import type { AxiosError } from 'axios';
+import SkeletonLoader from '@/components/shared/SkeletonLoader.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -151,11 +152,7 @@ onMounted(() => {
     </div>
 
     <!-- Loading -->
-    <div v-if="isLoading" class="mt-8 text-center py-12">
-      <div
-        class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"
-      ></div>
-    </div>
+    <SkeletonLoader v-if="isLoading" class="mt-8" :lines="8" />
 
     <!-- Form -->
     <form v-else @submit="onSubmit" class="mt-8 space-y-6">
