@@ -13,10 +13,11 @@
     "build:frontend": "pnpm --filter @question-bank/frontend build",
     "build:admin": "pnpm --filter @question-bank/admin build",
     "test": "pnpm -r test",
-    "lint": "pnpm -r lint",
-    "lint:fix": "pnpm -r exec eslint . --fix",
-    "typecheck": "pnpm -r exec tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx,.vue",
+    "lint:fix": "eslint . --ext .ts,.tsx,.vue --fix",
     "format": "prettier --write \"**/*.{ts,tsx,vue,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,vue,js,json,md}\"",
+    "typecheck": "pnpm -r --parallel run typecheck",
     "clean": "pnpm -r exec rm -rf dist node_modules && rm -rf node_modules"
   },
   "keywords": [
