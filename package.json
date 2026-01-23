@@ -18,7 +18,17 @@
     "format": "prettier --write \"**/*.{ts,tsx,vue,js,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,vue,js,json,md}\"",
     "typecheck": "pnpm -r --parallel run typecheck",
-    "clean": "pnpm -r exec rm -rf dist node_modules && rm -rf node_modules"
+    "clean": "pnpm -r exec rm -rf dist node_modules && rm -rf node_modules",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,json,md}": [
+      "prettier --write"
+    ]
   },
   "keywords": [
     "question-bank",
@@ -29,7 +39,12 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.10.0",
-    "prettier": "^3.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.53.1",
+    "@typescript-eslint/parser": "^8.53.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.7.0",
+    "prettier": "^3.7.4",
     "typescript": "^5.7.3"
   },
   "engines": {
